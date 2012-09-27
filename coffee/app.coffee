@@ -17,6 +17,8 @@ $ ->
   # grab the handlebar template
   apartment_template = Handlebars.compile ($ '#apartment-template').html()
 
+
+
   ($ '#price-slider').slider
     range: true
     min: MIN_PRICE
@@ -25,6 +27,7 @@ $ ->
     values: [+($ '#min-price-input').val(), +($ '#max-price-input').val()]
     slide: (event, ui) ->
       setPrices ui.values[0], ui.values[1]
+    change: doFilter
 
   ($ '#beds-slider').slider
     range: true
@@ -34,6 +37,7 @@ $ ->
     values: [+($ '#min-beds-input').val(), +($ '#max-beds-input').val()]
     slide: (event, ui) ->
       setBeds ui.values[0], ui.values[1]
+    change: doFilter
 
   ($ '#days-slider').slider
     min: MIN_DAYS
@@ -42,6 +46,7 @@ $ ->
     value: +($ '#days-input').val()
     slide: (event, ui) ->
       setDays ui.value
+    change: doFilter
 
   mapOptions = {
     center: ( new google.maps.LatLng 29.9728, -90.05902 ),
@@ -54,14 +59,6 @@ $ ->
   $.getJSON '/apartments', (data) ->
     apartments = ( new Apartment a for a in data )
     mapApartments(apartments)
-
-  ($ 'button#filter').click ->
-    min_price = ($ '#min-price-input').val()
-    max_price = ($ '#max-price-input').val()
-    min_beds = ($ '#min-beds-input').val()
-    max_beds = ($ '#max-beds-input').val()
-    days = ($ '#days-input').val()
-    mapApartments ( findApartments min_price, max_price, min_beds, max_beds, days )
 
 mapApartments = (apartments) ->
   clearMarkers()
@@ -80,6 +77,14 @@ mapApartments = (apartments) ->
     google.maps.event.addListener marker, 'click', ->
       infoWindow.setContent @html
       infoWindow.open map, this
+
+doFilter = ->
+  min_price = ($ '#min-price-input').val()
+  max_price = ($ '#max-price-input').val()
+  min_beds = ($ '#min-beds-input').val()
+  max_beds = ($ '#max-beds-input').val()
+  days = ($ '#days-input').val()
+  mapApartments ( findApartments min_price, max_price, min_beds, max_beds, days )
 
 clearMarkers = ->
   for marker in markers
