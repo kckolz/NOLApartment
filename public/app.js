@@ -23,11 +23,23 @@
   MAX_DAYS = 7;
 
   $(function() {
-    var mapOptions;
+    var mapOptions, applyFilter;
+
     setPrices(MIN_PRICE, MAX_PRICE);
     setBeds(MIN_BEDS, MAX_BEDS);
     setDays(MAX_DAYS);
     apartment_template = Handlebars.compile(($('#apartment-template')).html());
+
+    applyFilter = function(event, ui) {
+      var days, max_beds, max_price, min_beds, min_price;
+      min_price = ($('#min-price-input')).val();
+      max_price = ($('#max-price-input')).val();
+      min_beds = ($('#min-beds-input')).val();
+      max_beds = ($('#max-beds-input')).val();
+      days = ($('#days-input')).val();
+      return mapApartments(findApartments(min_price, max_price, min_beds, max_beds, days));
+    };
+
     ($('#price-slider')).slider({
       range: true,
       min: MIN_PRICE,
@@ -36,7 +48,8 @@
       values: [+($('#min-price-input')).val(), +($('#max-price-input')).val()],
       slide: function(event, ui) {
         return setPrices(ui.values[0], ui.values[1]);
-      }
+      },
+      change: applyFilter
     });
     ($('#beds-slider')).slider({
       range: true,
@@ -46,7 +59,8 @@
       values: [+($('#min-beds-input')).val(), +($('#max-beds-input')).val()],
       slide: function(event, ui) {
         return setBeds(ui.values[0], ui.values[1]);
-      }
+      },
+      change: applyFilter
     });
     ($('#days-slider')).slider({
       min: MIN_DAYS,
@@ -55,7 +69,8 @@
       value: +($('#days-input')).val(),
       slide: function(event, ui) {
         return setDays(ui.value);
-      }
+      },
+      change: applyFilter
     });
     mapOptions = {
       center: new google.maps.LatLng(29.9728, -90.05902),
@@ -75,15 +90,6 @@
         return _results;
       })();
       return mapApartments(apartments);
-    });
-    return ($('button#filter')).click(function() {
-      var days, max_beds, max_price, min_beds, min_price;
-      min_price = ($('#min-price-input')).val();
-      max_price = ($('#max-price-input')).val();
-      min_beds = ($('#min-beds-input')).val();
-      max_beds = ($('#max-beds-input')).val();
-      days = ($('#days-input')).val();
-      return mapApartments(findApartments(min_price, max_price, min_beds, max_beds, days));
     });
   });
 
