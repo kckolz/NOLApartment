@@ -28,11 +28,6 @@ body {
   margin: 15px;
 }
 
-#filter {
-  float: left;
-  margin-top: 37px;
-}
-
 .hidden {
   display: none;
 }
