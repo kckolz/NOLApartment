@@ -1,7 +1,6 @@
 require 'feedzirra'
 require 'nokogiri'
 require 'open-uri'
-require 'geocoder'
 require_relative 'ad'
 require_relative 'apartments'
 

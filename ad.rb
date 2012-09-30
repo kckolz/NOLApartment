@@ -1,3 +1,6 @@
+require 'geocoder'
+require_relative 'geocoder'
+
 class Ad
   attr_accessor :street0, :street1, :city, :state, :latitude, :longitude, :beds,
     :price, :url, :title, :published
@@ -13,12 +16,9 @@ class Ad
 
   def geocode!
     if self.address
-      result = Geocoder.search(self.address).first
-
-      if result
-        @latitude = result.latitude
-        @longitude = result.longitude
-      end
+      result = NOLApartment::Geocoder.get_location(self.address)
+      @latitude = result[:latitude]
+      @longitude = result[:longitude]
     end
 
     self
