@@ -3,14 +3,14 @@ require 'sinatra/assetpack'
 require 'rufus/scheduler'
 require 'json'
 require_relative 'apartments'
-require_relative 'loader'
-require_relative 'apartments'
+#require_relative 'loader'
+#require_relative 'apartments'
 
-scheduler = Rufus::Scheduler.start_new
+#scheduler = Rufus::Scheduler.start_new
 
-scheduler.every '2h' do
-  Loader.run
-end
+#scheduler.every '2h' do
+  #Loader.run
+#end
 
 class App < Sinatra::Base
   register Sinatra::AssetPack
