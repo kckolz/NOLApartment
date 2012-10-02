@@ -24,6 +24,8 @@ class App < Sinatra::Base
     css :application, [
       'css/application.css'
     ]
+
+    js_compression :yui
   end
 
   get '/' do
