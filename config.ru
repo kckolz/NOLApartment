@@ -1,3 +1,3 @@
-require_relative 'app'
+require './app'
 App.set :run, false
 run App
