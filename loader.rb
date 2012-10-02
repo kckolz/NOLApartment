@@ -1,6 +1,4 @@
 require 'feedzirra'
-require 'nokogiri'
-require 'open-uri'
 require_relative 'ad'
 require_relative 'apartments'
 

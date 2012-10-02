@@ -1,4 +1,5 @@
 require 'geocoder'
+require 'nokogiri'
 require_relative 'geocoder'
 
 class Ad
