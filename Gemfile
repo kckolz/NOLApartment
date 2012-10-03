@@ -8,7 +8,7 @@ gem 'mongo'
 gem 'json'
 gem 'rufus-scheduler'
 gem 'sinatra-assetpack'
-gem 'yui-compressor', :require => 'yui/compressor'
+gem 'coffee-script'
 
 group :test do
   gem 'rspec'
