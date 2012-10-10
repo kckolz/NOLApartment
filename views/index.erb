@@ -3,7 +3,6 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <%= css :application %>
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/base/jquery-ui.css" type="text/css" media="all" />
     <script type="text/javascript"
       src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAvIL2g56oknkfO5zsVPL5JZQvebfvl7tI&sensor=false">
     </script>
@@ -27,23 +26,20 @@
   </head>
   <body>
     <div id="filters">
-      <div class="filter">
-        price:
-        <span id='price-range' ></span>
-        <div id='price-slider' class='filter-slide'></div>
-      </div>
+      <fieldset>
+        <legend>Price: <span id='price-range'></span></legend>
+        <div id='price-slider'></div>
+      </fieldset>
 
-      <div class="filter">
-        beds:
-        <span id='beds-range' ></span>
-        <div id='beds-slider' class='filter-slide'></div>
-      </div>
+      <fieldset>
+        <legend>Beds: <span id='beds-range'></span></legend>
+        <div id='beds-slider'></div>
+      </fieldset>
 
-      <div class="filter">
-        posted in the last:
-        <span id='days'></span>
-        <div id='days-slider' class='filter-slide'></div>
-      </div>
+      <fieldset>
+        <legend>Posted in the last: <span id='days'></span></legend>
+        <div id='days-slider'></div>
+      </fieldset>
 
       <div class="hidden">
         <input id="min-price-input" />
