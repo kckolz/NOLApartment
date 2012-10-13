@@ -1,11 +1,10 @@
 require 'sinatra/base'
+require 'coffee-script'
 require 'sinatra/assetpack'
 require 'rufus/scheduler'
 require 'json'
-require 'coffee-script'
-require_relative 'apartments'
-require_relative 'loader'
-require_relative 'apartments'
+require './apartments'
+require './loader'
 
 scheduler = Rufus::Scheduler.start_new
 
