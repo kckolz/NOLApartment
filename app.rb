@@ -34,5 +34,3 @@ class App < Sinatra::Base
     Apartments.all.to_json
   end
 end
-
-App.run!
