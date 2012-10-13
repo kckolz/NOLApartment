@@ -12,6 +12,10 @@ scheduler.every '2h' do
   Loader.run
 end
 
+scheduler.cron '0 3 * * *' do
+  Loader.expire
+end
+
 class App < Sinatra::Base
   register Sinatra::AssetPack
 
