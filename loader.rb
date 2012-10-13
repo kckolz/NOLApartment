@@ -1,7 +1,8 @@
 require 'feedzirra'
-require_relative 'ad'
-require_relative 'apartments'
+require './ad'
+require './apartments'
 
+# TODO make this a rake task
 class Loader
   def self.run
     feed = Feedzirra::Feed.fetch_and_parse('neworleans.craigslist.org/apa/index.rss')
