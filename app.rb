@@ -9,7 +9,6 @@ require './loader'
 scheduler = Rufus::Scheduler.start_new
 
 scheduler.every '2h' do
-  p 'loader'
   Loader.run
 end
 
