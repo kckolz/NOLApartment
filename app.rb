@@ -23,7 +23,7 @@ class App < Sinatra::Base
     js :app, [
       'js/app/app.js',
       'js/app/apartment.js',
-      'js/vendor/handlebars-1.0.0.beta.6.js'
+      'js/vendor/handlebars.js'
     ]
     css :application, [
       'css/application.css'
