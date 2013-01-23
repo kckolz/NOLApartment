@@ -18,19 +18,6 @@ scheduler.cron '0 3 * * *' do
 end
 
 class App < Sinatra::Base
-  register Sinatra::AssetPack
-
-  assets do
-    js :app, [
-      'js/app/app.js',
-      'js/app/apartment.js',
-      'js/vendor/handlebars.js'
-    ]
-    css :application, [
-      'css/application.css'
-    ]
-  end
-
   get '/' do
     @apartments = Apartments.all
     erb :index
