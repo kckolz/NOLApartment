@@ -22,7 +22,8 @@ class App < Sinatra::Base
   assets do
     js :app, [
       'js/app/app.js',
-      'js/app/apartment.js'
+      'js/app/apartment.js',
+      'js/vendor/handlebars-1.0.0.beta.6.js'
     ]
     css :application, [
       'css/application.css'

@@ -15,7 +15,7 @@ $ ->
   setDays MAX_DAYS
 
   # grab the handlebar template
-  apartment_template = _.template ($ '#apartment-template').html()
+  apartment_template = Handlebars.compile ($ '#apartment-template').html()
 
 
 
