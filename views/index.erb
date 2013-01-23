@@ -2,15 +2,16 @@
 <html>
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <%= css :application %>
+    <link rel="stylesheet" type="text/css" href="css/application.css">
     <script type="text/javascript"
       src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAvIL2g56oknkfO5zsVPL5JZQvebfvl7tI&sensor=false">
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
-    <%= js :app %>
-    <%= js :apartment %>
-    <%= js :handlebars %>
+    <script src="/js/vendor/underscore-min.js"></script>
+    <script src="/js/vendor/backbone-min.js"></script>
+    <script src="/js/vendor/handlebars.js"></script>
+
     <script id="apartment-template" type="text/x-handlebars-template" >
       <a href="{{url}}" target="_blank">{{title}}</a>
       <div>
@@ -23,33 +24,30 @@
        Posted {{daysSincePosted}} days ago. ({{published}})
       </div>
     </script>
-  </head>
+
+    <script id='slider-template' type="text/x-handlebars-template">
+      <legend> {{label}}: <span class="value">{{value}}</span></legend>
+      <div class="slider"></div>
+    </script>
+
+    <script src="/js/app.js"></script>
+   </head>
+
   <body>
     <div id="filters">
-      <fieldset>
-        <legend>Price: <span id='price-range'></span></legend>
-        <div id='price-slider'></div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Beds: <span id='beds-range'></span></legend>
-        <div id='beds-slider'></div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Posted in the last: <span id='days'></span></legend>
-        <div id='days-slider'></div>
-      </fieldset>
-
-      <div class="hidden">
-        <input id="min-price-input" />
-        <input id="max-price-input" />
-        <input id="min-beds-input" />
-        <input id="max-beds-input" />
-        <input id="days-input" />
-      </div>
-      
     </div>
-    <div id="map_canvas"></div>
+    <script type="text/javascript">
+      App.Data.apartments = <%= @apartments.to_json %>;
+
+      var priceSlider = new App.Views.PriceSlider({ model: search }),
+        bedSlider = new App.Views.BedSlider({ model: search }),
+        daySlider = new App.Views.DaySlider({ model: search }),
+        map = new App.Views.Map({ id: 'map_canvas', model: search });
+
+      $('#filters').append(priceSlider.el);
+      $('#filters').append(bedSlider.el);
+      $('#filters').append(daySlider.el);
+      $('body').append(map.el);
+    </script>
   </body>
 </html>
