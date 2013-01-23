@@ -57,13 +57,9 @@
         url: '/apartments',
         search: function(search) {
           return this.filter(function(apartment) {
-            console.log(apartment);
             var priceMatch = apartment.get('price') >= search.get('minPrice') && apartment.get('price') <= search.get('maxPrice'),
               bedMatch = apartment.get('beds') >= search.get('minBeds') && apartment.get('beds') <= search.get('maxBeds');
               dayMatch = apartment.daysSincePosted() <= search.get('daysOld');
-
-              console.log(priceMatch);
-              console.log(bedMatch);
 
               return priceMatch && bedMatch && dayMatch;
           });
@@ -122,7 +118,6 @@
       App.Views.Map = Backbone.View.extend({
         apartmentTemplate: Handlebars.compile($('#apartment-template').html()),
         initialize: function() {
-          console.log(this);
           this.collection = new App.Collections.Apartments(App.Data.apartments);
           this.markers = [];
 
