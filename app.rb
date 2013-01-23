@@ -9,6 +9,7 @@ require './loader'
 scheduler = Rufus::Scheduler.start_new
 
 scheduler.every '2h' do
+  p 'loader'
   Loader.run
 end
 
@@ -31,6 +32,7 @@ class App < Sinatra::Base
   end
 
   get '/' do
+    @apartments = Apartments.all
     erb :index
   end
 
