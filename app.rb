@@ -1,6 +1,4 @@
 require 'sinatra/base'
-require 'coffee-script'
-require 'sinatra/assetpack'
 require 'rufus/scheduler'
 require 'json'
 require './apartments'
