@@ -39,7 +39,14 @@
     <script type="text/javascript">
       App.Data.apartments = <%= @apartments.to_json %>;
 
-      var priceSlider = new App.Views.PriceSlider({ model: search }),
+      var search = new App.Models.ApartmentSearch({
+        minPrice: 0,
+        maxPrice: 5000,
+        minBeds: 0,
+        maxBeds: 10,
+        daysOld: 7
+      }),
+        priceSlider = new App.Views.PriceSlider({ model: search }),
         bedSlider = new App.Views.BedSlider({ model: search }),
         daySlider = new App.Views.DaySlider({ model: search }),
         map = new App.Views.Map({ id: 'map_canvas', model: search });

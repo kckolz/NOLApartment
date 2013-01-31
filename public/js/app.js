@@ -162,12 +162,3 @@ App.Views.DaySlider = App.Views.Slider.extend({
   sliderMax: 7,
   sliderStep: 1
 });
-
-
-var search = new App.Models.ApartmentSearch({
-  minPrice: 500,
-  maxPrice: 2500,
-  minBeds: 0,
-  maxBeds: 10,
-  daysOld: 7
-});
