@@ -1,4 +1,17 @@
+require 'json'
+
 web_directory = '/www'
+
+env_file = File.join(web_directory, 'nolapartment.env')
+if File.exists? env_file
+  file = File.new env_file
+  envs = JSON.parse file.read
+
+  envs.each do |k, v|
+    ENV[k] = v
+  end
+end
+
 app_directory = "#{web_directory}/NOLApartment"
 
 working_directory "#{app_directory}"
