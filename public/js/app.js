@@ -13,7 +13,10 @@ App.Models.ApartmentSearch = Backbone.Model.extend({
 });
 
 App.Models.Apartment = Backbone.Model.extend({
-  daysSincePosted: function() {
+  initialize: function() {
+    this.set('daysSincePosted',this.getDaysSincePosted());
+  },
+  getDaysSincePosted: function() {
     return Math.floor((new Date() - new Date(this.get('published'))) / (1000*60*60*24));
   }
 });
@@ -25,7 +28,7 @@ App.Collections.Apartments = Backbone.Collection.extend({
     return this.filter(function(apartment) {
       var priceMatch = apartment.get('price') >= search.get('minPrice') && apartment.get('price') <= search.get('maxPrice'),
         bedMatch = apartment.get('beds') >= search.get('minBeds') && apartment.get('beds') <= search.get('maxBeds');
-        dayMatch = apartment.daysSincePosted() <= search.get('daysOld');
+        dayMatch = apartment.get('daysSincePosted') <= search.get('daysOld');
 
         return priceMatch && bedMatch && dayMatch;
     });
@@ -141,7 +144,7 @@ App.Views.Map = Backbone.View.extend({
     this.markers = this.collection.search(this.model).map(function(apartment) {
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(apartment.get('latitude'), apartment.get('longitude')),
-        html: markerTemplate(apartment)
+        html: markerTemplate(apartment.toJSON())
       });
 
       marker.setMap(gMap);
