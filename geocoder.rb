@@ -7,12 +7,12 @@ module NOLApartment
   module Geocoder
 
     def self.google_key
-      @@google_key ||= YAML::load(File.new('config/keys.yaml').read)[:google]
+      ENV['GOOGLE_API']
     end
 
     def self.get_location address, deep=true
       # Can't do 'deep' searches without a google api key.
-      deep = deep && self.google_key != 'KEY'
+      deep = deep && self.google_key
 
       geocode_result = ::Geocoder.search(address).first
       result = {}
