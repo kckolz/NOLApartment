@@ -1,14 +1,14 @@
 var App = { Models: {}, Views: {}, Collections: {}, Data: {} };
 
 App.Models.ApartmentSearch = Backbone.Model.extend({
-  priceDisplay: function() {
-    return '$' + this.get('minPrice') + '-' + '$' + this.get('maxPrice');
+  priceDisplay: function(min, max) {
+    return '$' + min + '-' + '$' + max;
   },
-  bedsDisplay: function() {
-    return this.get('minBeds') + '-' + this.get('maxBeds');
+  bedsDisplay: function(min, max) {
+    return min + '-' + max;
   },
-  daysDisplay: function() {
-    return this.get('daysOld') + ' days';
+  daysDisplay: function(days) {
+    return days + ' days';
   }
 });
 
@@ -36,50 +36,78 @@ App.Views.Slider = Backbone.View.extend({
   tagName: 'fieldset',
   template: Handlebars.compile($('#slider-template').html()),
   initialize: function() {
-    var sliderView = this;
+    this.render();
+
+    this.$el.find('.slider').slider(this.getSliderOptions());
+  },
+  getSliderOptions: function() {
+    var attribute = this.values[0],
+      search = this.model,
+      self = this;
 
     var sliderOptions = {
       range: false,
       min: this.sliderMin,
       max: this.sliderMax,
-      step: this.sliderStep
+      step: this.sliderStep,
+      value: this.model.get(attribute),
+      slide: function(event, ui) {
+        self.setDisplay(ui.value);
+      },
+      change: function(event, ui) {
+        search.set(attribute, ui.value)
+      }
     };
 
-    if (this.values.length == 2) {
-      var minAttr = this.values[0],
-        maxAttr = this.values[1];
-
-      sliderOptions.range = true;
-      sliderOptions.values = [sliderView.model.get(minAttr), sliderView.model.get(maxAttr)]
-      sliderOptions.slide = function(event, ui) {
-        sliderView.model.set(minAttr, ui.values[0]);
-        sliderView.model.set(maxAttr, ui.values[1]);
-        sliderView.setDisplay();
-      }
-    }
-    else {
-      var attribute = this.values[0];
-
-      sliderOptions.value = sliderView.model.get(attribute);
-      sliderOptions.slide = function(event, ui) {
-        sliderView.model.set(attribute, ui.value)
-        sliderView.setDisplay();
-      }
-    }
-
-    this.render();
-
-    this.$el.find('.slider').slider(sliderOptions);
+    return sliderOptions;
   },
-  setDisplay: function() {
-    this.$el.find('.value').html(this.model[this.displayAttribute]());
+  setDisplay: function(val) {
+    this.$el.find('.value').html(this.model[this.displayAttribute](val));
   },
   render: function() {
     this.$el.html(this.template({
       label: this.label
     }));
 
-    this.setDisplay();
+    this.setDisplay(this.model.get(this.values[0]));
+  }
+});
+
+
+App.Views.RangeSlider = App.Views.Slider.extend({
+  getSliderOptions: function() {
+    var minAttr = this.values[0],
+      maxAttr = this.values[1],
+      search = this.model,
+      setDisplay = this.setDisplay,
+      self = this;
+
+    var sliderOptions = {
+      range: true,
+      min: this.sliderMin,
+      max: this.sliderMax,
+      step: this.sliderStep,
+      values: [this.model.get(minAttr), this.model.get(maxAttr)],
+      slide: function(event, ui) {
+        self.setDisplay(ui.values[0], ui.values[1]);
+      },
+      change: function(event, ui) {
+        search.set(minAttr, ui.values[0]);
+        self.model.set(maxAttr, ui.values[1]);
+      }
+    };
+
+    return sliderOptions;
+  },
+  setDisplay: function(min, max) {
+    this.$el.find('.value').html(this.model[this.displayAttribute](min, max));
+  },
+  render: function() {
+    this.$el.html(this.template({
+      label: this.label
+    }));
+
+    this.setDisplay(this.model.get(this.values[0]), this.model.get(this.values[1]));
   }
 });
 
@@ -138,7 +166,7 @@ App.Views.Map = Backbone.View.extend({
   }
 });
 
-App.Views.PriceSlider = App.Views.Slider.extend({
+App.Views.PriceSlider = App.Views.RangeSlider.extend({
   label: 'Price',
   values: ['minPrice', 'maxPrice'],
   displayAttribute: 'priceDisplay',
@@ -147,7 +175,7 @@ App.Views.PriceSlider = App.Views.Slider.extend({
   sliderStep: 50
 });
 
-App.Views.BedSlider = App.Views.Slider.extend({
+App.Views.BedSlider = App.Views.RangeSlider.extend({
   label: 'Beds',
   values: ['minBeds', 'maxBeds'],
   displayAttribute: 'bedsDisplay',
