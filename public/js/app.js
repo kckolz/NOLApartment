@@ -153,7 +153,7 @@ App.Views.Map = Backbone.View.extend({
 
       google.maps.event.addListener(marker, 'click', function() {
         infoWindow.setContent(this.html);
-        infoWindow.open(map, this);
+        infoWindow.open(gMap, marker);
       });
 
       return marker;
