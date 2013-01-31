@@ -36,9 +36,7 @@ App.Views.Slider = Backbone.View.extend({
   tagName: 'fieldset',
   template: Handlebars.compile($('#slider-template').html()),
   initialize: function() {
-    var $element = this.$el,
-      search = this.model,
-      displayAttr = this.displayAttribute;
+    var sliderView = this;
 
     var sliderOptions = {
       range: false,
@@ -52,20 +50,20 @@ App.Views.Slider = Backbone.View.extend({
         maxAttr = this.values[1];
 
       sliderOptions.range = true;
-      sliderOptions.values = [search.get(minAttr), search.get(maxAttr)]
+      sliderOptions.values = [sliderView.model.get(minAttr), sliderView.model.get(maxAttr)]
       sliderOptions.slide = function(event, ui) {
-        search.set(minAttr, ui.values[0]);
-        search.set(maxAttr, ui.values[1]);
-        $element.find('.value').html(search[displayAttr]());
+        sliderView.model.set(minAttr, ui.values[0]);
+        sliderView.model.set(maxAttr, ui.values[1]);
+        sliderView.setDisplay();
       }
     }
     else {
       var attribute = this.values[0];
 
-      sliderOptions.value = search.get(attribute);
+      sliderOptions.value = sliderView.model.get(attribute);
       sliderOptions.slide = function(event, ui) {
-        search.set(attribute, ui.value)
-        $element.find('.value').html(search[displayAttr]());
+        sliderView.model.set(attribute, ui.value)
+        sliderView.setDisplay();
       }
     }
 
@@ -73,11 +71,15 @@ App.Views.Slider = Backbone.View.extend({
 
     this.$el.find('.slider').slider(sliderOptions);
   },
+  setDisplay: function() {
+    this.$el.find('.value').html(this.model[this.displayAttribute]());
+  },
   render: function() {
     this.$el.html(this.template({
-      label: this.label,
-      value: this.model[this.displayAttribute]()
+      label: this.label
     }));
+
+    this.setDisplay();
   }
 });
 
