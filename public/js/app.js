@@ -41,7 +41,7 @@ App.Views.Slider = Backbone.View.extend({
     this.$el.find('.slider').slider(this.getSliderOptions());
   },
   getSliderOptions: function() {
-    var attribute = this.values[0],
+    var attribute = this.value,
       search = this.model,
       self = this;
 
@@ -69,7 +69,7 @@ App.Views.Slider = Backbone.View.extend({
       label: this.label
     }));
 
-    this.setDisplay(this.model.get(this.values[0]));
+    this.setDisplay(this.model.get(this.value));
   }
 });
 
@@ -186,7 +186,7 @@ App.Views.BedSlider = App.Views.RangeSlider.extend({
 
 App.Views.DaySlider = App.Views.Slider.extend({
   label: 'Posted in the last',
-  values: ['daysOld'],
+  value: 'daysOld',
   displayAttribute: 'daysDisplay',
   sliderMin: 0,
   sliderMax: 7,
