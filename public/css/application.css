@@ -67,14 +67,31 @@ body {
   display: none;
 }
 
+.apartment-info {
+  width: 300px;
+}
+
+.title {
+  text-decoration: none;
+}
+
+.price {
+  font-size: xx-large;
+}
+
 .dollars {
   font-size: xx-large;
   color: green;
 }
 
+.posted {
+  display: inline-block;
+}
+
 .beds {
-  font-size: x-large;
-  margin-right: 2px;
+  font-size: xx-large;
+  float: right;
+  margin-right: 0.5em;
 }
 
 #filters {
@@ -108,6 +125,7 @@ body {
   text-shadow: 0 1px white;
   padding: 0;
 }
+
 
 /* for later...
 

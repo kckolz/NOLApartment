@@ -13,15 +13,24 @@
     <script src="/js/vendor/handlebars.js"></script>
 
     <script id="apartment-template" type="text/x-handlebars-template" >
-      <a href="{{url}}" target="_blank">{{title}}</a>
-      <div>
-        {{#if price}}
-        <span class="dollars">${{price}}</span>
-        {{/if}}
-        <span class="beds">{{beds}}</span><span>beds</span>
-      </div>
-      <div>
-       Posted {{daysSincePosted}} days ago. ({{published}})
+      <div class="apartment-info">
+        <a href="{{url}}" target="_blank" class="title">{{title}}</a>
+        <div>
+          {{#if price}}
+            <span class="price">
+              <span>${{price}}</span>
+            </span>
+          {{/if}}
+
+          {{#if beds}}
+          <span class="beds">
+            <span class="bed-count">{{beds}}</span> beds
+          </span>
+          {{/if}}
+        </div>
+        <div class="posted">
+         Posted {{daysSincePosted}} days ago. ({{published}})
+        </div>
       </div>
     </script>
 
