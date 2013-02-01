@@ -17,6 +17,12 @@ end
 class App < Sinatra::Base
   get '/' do
     @apartments = Apartments.all
+
+    per_beds = @apartments.select { |a| a['price'] && a['beds'] }
+      .map { |a| a['price'].to_i / a['beds'].to_i }
+
+    @avg_per_bed = per_beds.inject(:+) / per_beds.length
+
     erb :index
   end
 

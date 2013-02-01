@@ -17,7 +17,7 @@
         <a href="{{url}}" target="_blank" class="title">{{title}}</a>
         <div>
           {{#if price}}
-            <span class="price">
+            <span class="price {{priceClass}}">
               <span>${{price}}</span>
             </span>
           {{/if}}
@@ -47,6 +47,7 @@
     </div>
     <script type="text/javascript">
       App.Data.apartments = <%= @apartments.to_json %>;
+      App.Data.avgPerBed = <%= @avg_per_bed %>;
 
       var search = new App.Models.ApartmentSearch({
         minPrice: 0,
@@ -58,7 +59,7 @@
         priceSlider = new App.Views.PriceSlider({ model: search }),
         bedSlider = new App.Views.BedSlider({ model: search }),
         daySlider = new App.Views.DaySlider({ model: search }),
-        map = new App.Views.Map({ id: 'map_canvas', model: search });
+        map = new App.Views.Map({ id: 'map_canvas', model: search, avgPerBed: App.Data.avgPerBed });
 
       $('#filters').append(priceSlider.el);
       $('#filters').append(bedSlider.el);

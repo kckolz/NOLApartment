@@ -116,9 +116,11 @@ App.Views.RangeSlider = App.Views.Slider.extend({
 
 App.Views.Map = Backbone.View.extend({
   apartmentTemplate: Handlebars.compile($('#apartment-template').html()),
-  initialize: function() {
+  initialize: function(options) {
     this.collection = new App.Collections.Apartments(App.Data.apartments);
     this.markers = [];
+    console.log(this);
+    this.avgPerBed = options.avgPerBed;
 
     mapOptions = {
       center: new google.maps.LatLng(29.9728, -90.05902),
@@ -139,12 +141,16 @@ App.Views.Map = Backbone.View.extend({
     this.clearMap();
 
     var markerTemplate = this.apartmentTemplate,
-      gMap = this.map;
+      gMap = this.map,
+      calcPriceClass = _.bind(this.calcPriceClass, this);
 
     this.markers = this.collection.search(this.model).map(function(apartment) {
+      var templateData = apartment.toJSON();
+      templateData.priceClass = calcPriceClass(apartment);
+
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(apartment.get('latitude'), apartment.get('longitude')),
-        html: markerTemplate(apartment.toJSON())
+        html: markerTemplate(templateData)
       });
 
       marker.setMap(gMap);
@@ -166,6 +172,25 @@ App.Views.Map = Backbone.View.extend({
     });
 
     this.markers = [];
+  },
+  calcPriceClass: function(apartment) {
+    var price = apartment.get('price'),
+      beds = apartment.get('beds'),
+      klass;
+
+    if (this.avgPerBed && price && beds) {
+
+      var diff = (price / beds) / this.avgPerBed;
+
+      if (diff >= 1.1) {
+        klass = 'high-price';
+      }
+      else if (diff <= 0.9) {
+        klass = 'low-price';
+      }
+    }
+
+    return klass;
   }
 });
 

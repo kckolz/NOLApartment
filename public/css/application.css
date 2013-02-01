@@ -79,11 +79,6 @@ body {
   font-size: xx-large;
 }
 
-.dollars {
-  font-size: xx-large;
-  color: green;
-}
-
 .posted {
   display: inline-block;
 }
@@ -92,6 +87,14 @@ body {
   font-size: xx-large;
   float: right;
   margin-right: 0.5em;
+}
+
+.low-price {
+  color: green;
+}
+
+.high-price {
+  color: red;
 }
 
 #filters {
