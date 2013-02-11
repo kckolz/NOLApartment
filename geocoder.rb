@@ -1,41 +1,33 @@
 require 'geocoder'
-require 'open-uri'
-require 'json'
-require 'yaml'
+require './spell_checker'
 
 module NOLApartment
   module Geocoder
+    def self.spell_checker
+      @@spell_checker ||= SpellChecker.new
+    end
 
-    def self.google_key
-      ENV['GOOGLE_API']
+    def self.good_response? response
+      ( %w(street_address intersection) & response.types ).any?
+    end
+
+    def self.parse_response response
+      {
+        :latitude => response.latitude,
+        :longitude => response.longitude
+      }
     end
 
     def self.get_location address, deep=true
-      # Can't do 'deep' searches without a google api key.
-      deep = deep && self.google_key
-
       geocode_result = ::Geocoder.search(address).first
-      result = {}
 
-      if geocode_result
-        bad_result = (geocode_result.types & %w(street_address intersection)).empty?
-
-        result[:latitude] = geocode_result.latitude
-        result[:longitude] = geocode_result.longitude
-
-        if bad_result && deep
-          # didn't get a good result. Google HALP!
-          # TODO pull the google search out.
-          response = open "https://www.googleapis.com/customsearch/v1?key=#{self.google_key}&cx=008774535076880730414:pil9ab_j8-e&q=#{URI::encode(address)}"
-          search = JSON::parse response.read
-
-          if spelling = search["spelling"]
-            result = get_location spelling["correctedQuery"], false
-          end
-        end
+      result = if self.good_response? geocode_result
+        self.parse_response(geocode_result)
+      elsif deep && corrected_address = self.spell_checker.check(address)
+        self.get_location(corrected_address, false)
       end
 
-      result
+      result || {}
     end
   end
 end

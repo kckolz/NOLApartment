@@ -1,5 +1,6 @@
 require 'geocoder'
 require 'nokogiri'
+require 'open-uri'
 require_relative 'geocoder'
 
 class Ad
