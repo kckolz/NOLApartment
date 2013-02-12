@@ -21,6 +21,6 @@ class Loader
   end
 
   def self.expire
-    Apartments.collection.remove(:published => {'$lte' => Time.now - (7 * 24 * 60 * 60) })
+    Apartments.collection.remove({:published => {'$lte' => Time.now - (7 * 24 * 60 * 60) }})
   end
 end
