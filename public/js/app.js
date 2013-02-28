@@ -1,14 +1,14 @@
 var App = { Models: {}, Views: {}, Collections: {}, Data: {} };
 
 App.Models.ApartmentSearch = Backbone.Model.extend({
-  priceDisplay: function(min, max) {
-    return '$' + min + '-' + '$' + max;
+  priceDisplay: function() {
+    return '$' + this.get('minPrice') + '-' + '$' + this.get('maxPrice');
   },
-  bedsDisplay: function(min, max) {
-    return min + '-' + max;
+  bedsDisplay: function() {
+    return this.get('minBeds') + '-' + this.get('maxBeds');
   },
-  daysDisplay: function(days) {
-    return days + ' days';
+  daysDisplay: function() {
+    return this.get('daysOld') + ' days';
   }
 });
 
@@ -39,13 +39,13 @@ App.Views.Slider = Backbone.View.extend({
   tagName: 'fieldset',
   template: Handlebars.compile($('#slider-template').html()),
   initialize: function() {
+    this.listenTo(this.model, 'change', this.setDisplay);
     this.render();
 
     this.$el.find('.slider').slider(this.getSliderOptions());
   },
   getSliderOptions: function() {
     var attribute = this.value,
-      search = this.model,
       self = this;
 
     var sliderOptions = {
@@ -55,24 +55,24 @@ App.Views.Slider = Backbone.View.extend({
       step: this.sliderStep,
       value: this.model.get(attribute),
       slide: function(event, ui) {
-        self.setDisplay(ui.value);
+        self.model.set(attribute, ui.value);
       },
       change: function(event, ui) {
-        search.set(attribute, ui.value)
+        self.model.trigger('change_complete');
       }
     };
 
     return sliderOptions;
   },
-  setDisplay: function(val) {
-    this.$el.find('.value').html(this.model[this.displayAttribute](val));
+  setDisplay: function() {
+    this.$el.find('.value').html(this.model[this.displayAttribute]());
   },
   render: function() {
     this.$el.html(this.template({
       label: this.label
     }));
 
-    this.setDisplay(this.model.get(this.value));
+    this.setDisplay();
   }
 });
 
@@ -81,7 +81,6 @@ App.Views.RangeSlider = App.Views.Slider.extend({
   getSliderOptions: function() {
     var minAttr = this.values[0],
       maxAttr = this.values[1],
-      search = this.model,
       setDisplay = this.setDisplay,
       self = this;
 
@@ -92,25 +91,15 @@ App.Views.RangeSlider = App.Views.Slider.extend({
       step: this.sliderStep,
       values: [this.model.get(minAttr), this.model.get(maxAttr)],
       slide: function(event, ui) {
-        self.setDisplay(ui.values[0], ui.values[1]);
+        self.model.set(minAttr, ui.values[0]);
+        self.model.set(maxAttr, ui.values[1]);
       },
       change: function(event, ui) {
-        search.set(minAttr, ui.values[0]);
-        self.model.set(maxAttr, ui.values[1]);
+        self.model.trigger('change_complete');
       }
     };
 
     return sliderOptions;
-  },
-  setDisplay: function(min, max) {
-    this.$el.find('.value').html(this.model[this.displayAttribute](min, max));
-  },
-  render: function() {
-    this.$el.html(this.template({
-      label: this.label
-    }));
-
-    this.setDisplay(this.model.get(this.values[0]), this.model.get(this.values[1]));
   }
 });
 
@@ -119,7 +108,6 @@ App.Views.Map = Backbone.View.extend({
   initialize: function(options) {
     this.collection = new App.Collections.Apartments(App.Data.apartments);
     this.markers = [];
-    console.log(this);
     this.avgPerBed = options.avgPerBed;
 
     mapOptions = {
@@ -132,7 +120,7 @@ App.Views.Map = Backbone.View.extend({
     this.mapApartments();
 
 
-    this.model.on('change', this.mapApartments, this);
+    this.listenTo(this.model, 'change_complete', this.mapApartments, this);
   },
   render: function() {
     return self;
